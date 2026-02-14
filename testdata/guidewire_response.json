@@ -1,0 +1,109 @@
+{
+  "data": {
+    "submissionId": "SUB-2025-00123",
+    "state": "IA",
+    "underwriting": {
+      "riskScore": 612,
+      "riskLevel": "Low",
+      "eligibility": "Eligible",
+      "premiumChange": {
+        "previousPremium": null,
+        "currentPremium": null,
+        "aiEstimatedPremium": 1180,
+        "reasoning": "Driver has clean history, safe vehicle type, and stable risk profile. Iowa base rates applied."
+      },
+      "riskFactors": {
+        "positive": [
+          "Driver age 34 falls in a statistically safer segment",
+          "10 years licensed indicates driving maturity",
+          "No accidents or violations reported",
+          "Vehicle (Toyota Camry) is low‑severity and low‑theft‑risk",
+          "Annual mileage 12,000 is average and stable"
+        ],
+        "negative": []
+      },
+      "missingInformation": [
+        "Credit score not provided",
+        "Marital status not provided",
+        "Prior insurance history not provided",
+        "Previous premium not provided",
+        "Documents not provided"
+      ],
+      "fraudSignals": {
+        "score": 0,
+        "indicators": []
+      },
+      "underwriterNotes": [
+        "Overall profile appears low risk with no adverse history.",
+        "Recommend verifying credit score and prior insurance for pricing accuracy.",
+        "No red flags detected in driver or vehicle data."
+      ]
+    },
+    "aiInsights": {
+      "summary": "Applicant presents a low-risk profile with a clean driving history and a safe vehicle. Estimated premium aligns with Iowa market averages.",
+      "recommendations": [
+        "Collect credit score to refine pricing.",
+        "Confirm prior insurance to avoid surcharge.",
+        "Request ID and proof of address documents."
+      ],
+      "documentChecklist": [
+        "Driver's License",
+        "Vehicle Registration",
+        "Proof of Prior Insurance",
+        "ID Verification Document"
+      ]
+    },
+    "applicant": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "dateOfBirth": "1991-05-14",
+      "address": {
+        "street": "123 Main St",
+        "city": "Des Moines",
+        "state": "IA",
+        "zip": "50309"
+      }
+    },
+    "drivers": [
+      {
+        "driverId": "DRV-1",
+        "firstName": "John",
+        "lastName": "Doe",
+        "age": 34,
+        "licenseNumber": "D1234567",
+        "yearsLicensed": 10,
+        "accidents": [],
+        "violations": []
+      }
+    ],
+    "vehicles": [
+      {
+        "vehicleId": "VEH-1",
+        "year": 2020,
+        "make": "Toyota",
+        "model": "Camry",
+        "vin": "4T1BF1FK0LU123456",
+        "annualMileage": 12000,
+        "usage": "Commute",
+        "vehicleRiskScore": 12
+      }
+    ],
+    "coverages": {
+      "liability": {
+        "bodilyInjury": 100000,
+        "propertyDamage": 50000
+      },
+      "collision": {
+        "deductible": 500
+      },
+      "comprehensive": {
+        "deductible": 500
+      }
+    },
+    "requestedEffectiveDate": "2025-03-01",
+    "producer": {
+      "agencyName": "Midwest Insurance Group",
+      "agentName": "Sarah Thompson"
+    }
+  }
+}

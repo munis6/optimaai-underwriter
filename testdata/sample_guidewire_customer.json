@@ -1,0 +1,24 @@
+{
+  "customer": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 32,
+    "address": "123 Main St, Ellicott City, MD"
+  },
+  "vehicle": {
+    "year": 2020,
+    "make": "Toyota",
+    "model": "Camry",
+    "vin": "1234567890ABCDEF1"
+  },
+  "coverage": {
+    "liability": "100/300",
+    "collision": true,
+    "comprehensive": true
+  },
+  "guidewire": {
+    "ui": "Guidewire PolicyCenter",
+    "submissionId": "GW-REQ-001",
+    "timestamp": "2026-02-06T15:15:23.556706"
+  }
+}

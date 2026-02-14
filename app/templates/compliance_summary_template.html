@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Compliance Summary Report</title>
+    <style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 40px;
+        color: #333;
+    }
+
+    header {
+        background: #003366;
+        color: white;
+        padding: 20px;
+        border-radius: 6px;
+        margin-bottom: 30px;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 24px;
+        letter-spacing: 0.5px;
+    }
+
+    section {
+        margin-bottom: 35px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #fafafa;
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #003366;
+        font-size: 20px;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 5px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    table th {
+        background: #003366;
+        color: white;
+        padding: 10px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    .badge-pass {
+        background: #2ecc71;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    .badge-fail {
+        background: #e74c3c;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    .badge-review {
+        background: #f1c40f;
+        color: black;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #666;
+        text-align: center;
+    }
+
+    .status-banner {
+        padding: 15px;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 6px;
+        margin-bottom: 25px;
+    }
+
+    .status-pass { background: #2ecc71; }
+    .status-review { background: #f1c40f; color: black; }
+    .status-fail { background: #e74c3c; }
+</style>
+
+</head>
+
+<body>
+
+    <!-- EXECUTIVE HEADER -->
+    <header>
+        <h1>OptimaAI Compliance Summary Report</h1>
+        <p><strong>Transaction ID:</strong> {{ transactionId }}</p>
+        <p><strong>Generated:</strong> {{ timestamp }}</p>
+    </header>
+
+    <!-- EXECUTIVE STATUS BANNER -->
+    {% if overallComplianceStatus == "NO_ACTION_REQUIRED" %}
+    <div class="status-banner status-pass">
+        COMPLIANCE STATUS: PASS — NO ACTION REQUIRED
+    </div>
+    {% elif overallComplianceStatus == "REQUIRES_UNDERWRITER_REVIEW" %}
+    <div class="status-banner status-review">
+        COMPLIANCE STATUS: REVIEW REQUIRED
+    </div>
+    {% else %}
+    <div class="status-banner status-fail">
+        COMPLIANCE STATUS: FAILED — ACTION REQUIRED
+    </div>
+    {% endif %}
+
+    <hr>
+
+    <!-- COMPLIANCE SUMMARY -->
+    <section>
+        <h2>State Compliance Overview</h2>
+        <p><strong>State:</strong> {{ state }}</p>
+        <p><strong>Full Name:</strong> {{ stateFullName }}</p>
+        <p><strong>Overall Status:</strong> {{ overallComplianceStatus }}</p>
+        <p><strong>Notes:</strong> {{ complianceSummary }}</p>
+    </section>
+
+    <hr>
+
+    <!-- RULES CHECKED -->
+    <section>
+        <h2>Rules Checked</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rule ID</th>
+                    <th>Description</th>
+                    <th>Passed</th>
+                    <th>Severity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in rulesChecked %}
+                <tr>
+                    <td>{{ rule.ruleId }}</td>
+                    <td>{{ rule.description }}</td>
+
+                    <td>
+                        {% if rule.passed %}
+                            <span class="badge-pass">PASS</span>
+                        {% else %}
+                            <span class="badge-fail">FAIL</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if rule.severity == "LOW" %}
+                            <span class="badge-pass">LOW</span>
+                        {% elif rule.severity == "MEDIUM" %}
+                            <span class="badge-review">MEDIUM</span>
+                        {% elif rule.severity == "HIGH" %}
+                            <span class="badge-fail">HIGH</span>
+                        {% else %}
+                            <span>{{ rule.severity }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <!-- UNDERWRITING SUMMARY -->
+    <section>
+        <h2>Underwriting Summary</h2>
+
+        {% set uw = underwritingSummary.vehicles[0] if underwritingSummary.vehicles else None %}
+
+        {% if uw %}
+            <p><strong>Risk Score:</strong> {{ uw.riskScore }}</p>
+            <p><strong>Decision:</strong> {{ uw.eligibility }}</p>
+            <p><strong>Premium:</strong> {{ uw.premium }}</p>
+        {% endif %}
+
+        <p style="margin-top: 15px;">
+            <strong>Summary:</strong>
+            {% if uw %}
+                The underwriting decision was driven by the applicant’s risk score, eligibility, and vehicle‑level underwriting evaluation.
+            {% else %}
+                Underwriting data was not fully provided, so a narrative summary could not be generated.
+            {% endif %}
+        </p>
+    </section>
+
+    <hr>
+
+    <!-- AI INSIGHTS SUMMARY -->
+    <section>
+        <h2>AI Insights Summary</h2>
+
+        {% if aiInsightsSummary.driverRiskFactors %}
+            <p><strong>Driver Risk Factors:</strong> {{ aiInsightsSummary.driverRiskFactors }}</p>
+        {% endif %}
+
+        {% if aiInsightsSummary.pricingRationale %}
+            <p><strong>Pricing Rationale:</strong> {{ aiInsightsSummary.pricingRationale }}</p>
+        {% endif %}
+
+        {% if aiInsightsSummary.explanations %}
+            <p><strong>Explanation:</strong> {{ aiInsightsSummary.explanations }}</p>
+        {% endif %}
+
+        {% if aiInsightsSummary.improvementSuggestions %}
+            <p><strong>Improvement Suggestions:</strong> {{ aiInsightsSummary.improvementSuggestions }}</p>
+        {% endif %}
+
+        <p style="margin-top: 15px;">
+            <strong>AI Narrative:</strong>
+            {% if aiInsightsSummary.explanations %}
+                The AI model evaluated the applicant using underwriting data and generated insights based on risk factors, pricing rationale, and improvement opportunities.
+            {% else %}
+                No AI insight data was provided for this transaction.
+            {% endif %}
+        </p>
+    </section>
+
+    <hr>
+
+    <footer>
+        <p><em>Processing Chain:</em> Guidewire → OptimaAI Processor → Underwriter → AI Engine → Compliance Engine</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+{
+  "data": {
+    "submissionId": "SUB-2025-00123",
+    "applicant": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "dateOfBirth": "1991-05-14",
+      "address": {
+        "street": "123 Main St",
+        "city": "Des Moines",
+        "state": "IA",
+        "zip": "50309"
+      }
+    },
+    "drivers": [
+      {
+        "driverId": "DRV-1",
+        "firstName": "John",
+        "lastName": "Doe",
+        "age": 34,
+        "licenseNumber": "D1234567",
+        "yearsLicensed": 10,
+        "accidents": [],
+        "violations": []
+      }
+    ],
+    "vehicles": [
+      {
+        "vehicleId": "VEH-1",
+        "year": 2020,
+        "make": "Toyota",
+        "model": "Camry",
+        "vin": "4T1BF1FK0LU123456",
+        "annualMileage": 12000,
+        "usage": "Commute"
+      }
+    ],
+    "coverages": {
+      "liability": {
+        "bodilyInjury": 100000,
+        "propertyDamage": 50000
+      },
+      "collision": {
+        "deductible": 500
+      },
+      "comprehensive": {
+        "deductible": 500
+      }
+    },
+    "requestedEffectiveDate": "2025-03-01",
+    "producer": {
+      "agencyName": "Midwest Insurance Group",
+      "agentName": "Sarah Thompson"
+    }
+  }
+}
