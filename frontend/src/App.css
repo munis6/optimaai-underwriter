@@ -1,38 +1,168 @@
-.App {
-  text-align: center;
+/* ================================
+   GLOBAL RESET & BASE TYPOGRAPHY
+   ================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background: #f7f9fa;
+  color: #1a1a1a;
+  line-height: 1.6;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* ================================
+   LAYOUT CONTAINER
+   ================================ */
+
+.app-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+/* ================================
+   HEADER
+   ================================ */
+
+.header {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  padding: 22px 30px;
+  border-radius: 12px;
   color: white;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin-bottom: 35px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
-.App-link {
-  color: #61dafb;
+/* ================================
+   CARD STYLE (Upload, JSON Viewer)
+   ================================ */
+
+.card {
+  background: white;
+  padding: 28px;
+  border-radius: 14px;
+  margin-bottom: 28px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ================================
+   UPLOAD PANEL
+   ================================ */
+
+.upload-label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.upload-input {
+  padding: 12px;
+  border: 2px dashed #0d9488;
+  border-radius: 10px;
+  width: 100%;
+  cursor: pointer;
+  background: #f0fdfa;
+  transition: background 0.2s ease;
+}
+
+.upload-input:hover {
+  background: #ccfbf1;
+}
+
+/* ================================
+   JSON VIEWER
+   ================================ */
+
+.json-viewer {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 18px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+}
+
+/* ================================
+   PDF BUTTON
+   ================================ */
+
+.pdf-button {
+  background: #0d9488;
+  color: white;
+  padding: 14px 22px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 3px 8px rgba(13, 148, 136, 0.25);
+}
+
+.pdf-button:hover {
+  background: #0f766e;
+}
+
+.pdf-button:active {
+  transform: scale(0.97);
+}
+
+/* ================================
+   SPACING UTILITIES
+   ================================ */
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+.before-after-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.before-after-card {
+  flex: 1;
+  min-width: 0;
+}
+/* ============================
+   BEFORE / AFTER PANEL LAYOUT
+   ============================ */
+
+.before-after-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.json-panel {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: auto;
+  max-height: 600px;
 }

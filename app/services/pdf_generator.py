@@ -21,12 +21,22 @@ template = env.get_template("compliance_summary_template.html")
 config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
 
 def generate_compliance_pdf(summary: dict) -> bytes:
+    # Extract rules safely
+    rules = summary.get("rulesChecked", [])
+
+    # FIX: Prevent PDF crash when a state has zero rules
+    if not rules:
+        rules = [{
+            "ruleId": "N/A",
+            "description": "No rules available for this state."
+        }]
+
     rendered_html = template.render(
         state=summary.get("state"),
         stateFullName=summary.get("stateFullName"),
         overallComplianceStatus=summary.get("overallComplianceStatus"),
         complianceSummary=summary.get("complianceSummary"),
-        rulesChecked=summary.get("rulesChecked", []),
+        rulesChecked=rules,   # <-- now always safe
         underwritingSummary=summary.get("underwritingSummary", {}),
         aiInsightsSummary=summary.get("aiInsightsSummary", {}),
     )
@@ -50,14 +60,14 @@ def generate_compliance_pdf(summary: dict) -> bytes:
 # ---------------------------------------------------------
 def generate_optimaai_pdf(enriched: dict) -> bytes:
     """
-    Step 12: Convert enriched OptimaAI JSON into the summary dict
+    Convert enriched OptimaAI JSON into the summary dict
     expected by the existing Jinja2 PDF generator.
     """
 
     summary = {
         "state": enriched.get("state"),
-        "stateFullName": enriched.get("state"),  # placeholder until mapping added
-        "overallComplianceStatus": enriched.get("eligibility"),
+        "stateFullName": enriched.get("stateFullName"),  # now correct
+        "overallComplianceStatus": enriched.get("overallComplianceStatus"),
 
         "complianceSummary": {
             "riskScore": enriched.get("riskScore"),
@@ -65,17 +75,11 @@ def generate_optimaai_pdf(enriched: dict) -> bytes:
             "aiEstimatedPremium": enriched.get("aiEstimatedPremium"),
         },
 
-        "rulesChecked": [],  # optional for now
+        "rulesChecked": enriched.get("rulesChecked", []),
 
-        "underwritingSummary": {
-            "notes": enriched.get("underwriterNotes", []),
-        },
+        "underwritingSummary": enriched.get("underwritingSummary", {}),
 
-        "aiInsightsSummary": {
-            "missingDocuments": enriched.get("missingDocuments", []),
-            "documentCompletenessScore": enriched.get("documentCompletenessScore"),
-            "documentInsights": enriched.get("documentInsights", []),
-        }
+        "aiInsightsSummary": enriched.get("aiInsightsSummary", {})
     }
 
     return generate_compliance_pdf(summary)
