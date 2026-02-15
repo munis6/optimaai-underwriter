@@ -20,10 +20,12 @@ function App() {
         setIsEnriching(true);
 
         try {
-          const response = await fetch("https://optimaai-underwriter-backend.onrender.com/enrich", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(parsed),
+          const response = await fetch("https://optimaai-underwriter-backend.onrender.com/enrich", { 
+            method: "POST", 
+            headers: { 
+              "Content-Type": "application/json" 
+            }, 
+            body: JSON.stringify(jsonData)
           });
 
           if (!response.ok) {
