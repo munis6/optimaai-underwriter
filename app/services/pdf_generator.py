@@ -18,7 +18,8 @@ template = env.get_template("compliance_summary_template.html")
 # ---------------------------------------------------------
 # PDF GENERATOR
 # ---------------------------------------------------------
-config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
+#config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
+config = None
 
 def generate_compliance_pdf(summary: dict) -> bytes:
     # Extract rules safely
