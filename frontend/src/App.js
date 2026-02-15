@@ -60,7 +60,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/generate-compliance-report",
+        "https://optimaai-underwriter-backend.onrender.com/generate-compliance-report",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
