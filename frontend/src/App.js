@@ -20,12 +20,15 @@ function App() {
         setIsEnriching(true);
 
         try {
+          const file = e.target.files[0]; 
+          const text = await file.text(); 
+          const parsed = JSON.parse(text);
           const response = await fetch("https://optimaai-underwriter-backend.onrender.com/enrich", { 
             method: "POST", 
             headers: { 
               "Content-Type": "application/json" 
             }, 
-            body: JSON.stringify(jsonData)
+            body: JSON.stringify(parsed)
           });
 
           if (!response.ok) {
