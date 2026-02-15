@@ -20,16 +20,16 @@ function App() {
         setIsEnriching(true);
 
         try {
-          const file = e.target.files[0]; 
-          const text = await file.text(); 
-          const parsed = JSON.parse(text);
-          const response = await fetch("https://optimaai-underwriter-backend.onrender.com/enrich", { 
-            method: "POST", 
-            headers: { 
-              "Content-Type": "application/json" 
-            }, 
-            body: JSON.stringify(parsed)
-          });
+          const response = await fetch(
+            "https://optimaai-underwriter-backend.onrender.com/enrich",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(parsed),
+            }
+          );
 
           if (!response.ok) {
             alert("Enrichment failed.");
@@ -53,37 +53,39 @@ function App() {
   };
 
   const handleGeneratePdf = async () => {
-  if (!enrichedJson) {
-    alert("Please upload and enrich a JSON file first.");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:8000/generate-compliance-report", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(enrichedJson),
-    });
-
-    if (!response.ok) {
-      alert("PDF generation failed.");
+    if (!enrichedJson) {
+      alert("Please upload and enrich a JSON file first.");
       return;
     }
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+    try {
+      const response = await fetch(
+        "http://localhost:8000/generate-compliance-report",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(enrichedJson),
+        }
+      );
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "OptimaAI_Compliance_Report.pdf";
-    link.click();
+      if (!response.ok) {
+        alert("PDF generation failed.");
+        return;
+      }
 
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    alert("Error generating PDF.");
-  }
-};
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
 
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "OptimaAI_Compliance_Report.pdf";
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert("Error generating PDF.");
+    }
+  };
 
   return (
     <div className="app-container">
