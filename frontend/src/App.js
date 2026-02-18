@@ -5,10 +5,22 @@ import BeforeAfterPanel from "./BeforeAfterPanel";
 import PdfButton from "./PdfButton";
 
 function App() {
+  // ✅ FIXED — wrap payload ONCE
+  async function callBackendEnrich(payload) {
+    const res = await fetch("http://127.0.0.1:8000/enrich", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    return res.json();
+  }
+
   const [rawJson, setRawJson] = useState(null);
   const [enrichedJson, setEnrichedJson] = useState(null);
   const [isEnriching, setIsEnriching] = useState(false);
 
+  // ✅ FIXED — DO NOT double-wrap payload
   const handleFileSelect = async (file) => {
     const reader = new FileReader();
 
@@ -20,25 +32,8 @@ function App() {
         setIsEnriching(true);
 
         try {
-          const response = await fetch(
-            "https://optimaai-underwriter-backend.onrender.com/enrich",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(parsed),
-            }
-          );
-
-          if (!response.ok) {
-            alert("Enrichment failed.");
-            setIsEnriching(false);
-            return;
-          }
-
-          const enriched = await response.json();
-          setEnrichedJson(enriched);
+          const response = await callBackendEnrich(parsed); // FIXED
+          setEnrichedJson(response.processed_data);
         } catch (err) {
           alert("Error contacting enrichment service.");
         }

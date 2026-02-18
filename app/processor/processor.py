@@ -1,19 +1,32 @@
 # app/processor/processor.py
+
+# -----------------------------
+# Imports
+# -----------------------------
 from app.services.underwriting_engine import (
+    calculate_risk_score,
+    determine_eligibility,
+    build_summary_block,
+    build_ai_insights,
+    build_underwriting_details,
     generate_underwriting_summary,
-    generate_ai_insights
+    generate_ai_insights,
 )
-from .underwriting_engine import run_underwriting
 
 from .extractors import (
     handle_customer,
     handle_vehicle,
     handle_driver,
     handle_coverage,
-    handle_guidewire
+    handle_guidewire,
 )
+
 from .decision_builder import build_decision_json
 
+
+# -----------------------------
+# Main Processor
+# -----------------------------
 def process_data(payload):
     """
     Step 4.0:
@@ -22,48 +35,65 @@ def process_data(payload):
     - Build final OptimaAI decision JSON with AI insights (Step 4.0)
     """
 
+    # -----------------------------
+    # Raw payload extraction
+    # -----------------------------
     customer = payload.get("customer", {})
-    vehicles = payload.get("vehicles", [])      # <-- MULTI‑VEHICLE
-    drivers = payload.get("drivers", [])        # <-- MULTI‑DRIVER
+    vehicles = payload.get("vehicles", [])
+    drivers = payload.get("drivers", [])
     coverage = payload.get("coverage", {})
     guidewire = payload.get("guidewire", {})
 
-    # NEW — Iowa surcharge rule + future states
     previous_premium = payload.get("previousPremium")
     current_premium = payload.get("currentPremium")
     accidents = payload.get("accidents", [])
 
     # -----------------------------
-    # Step 2.2 extraction
+    # Step 2.2 — Extraction Layer
     # -----------------------------
     _customer_info = handle_customer(customer)
-    _vehicle_info_list = [handle_vehicle(v) for v in vehicles]   # <-- MULTI‑VEHICLE
-    _driver_info_list = [handle_driver(d) for d in drivers]      # <-- MULTI‑DRIVER
+    _vehicle_info_list = [handle_vehicle(v) for v in vehicles]
+    _driver_info_list = [handle_driver(d) for d in drivers]
     _coverage_info = handle_coverage(coverage)
     _guidewire_info = handle_guidewire(guidewire)
 
+    base_premium = _coverage_info.get("basePremium")
+
     extracted = {
         "customer": _customer_info,
-        "vehicles": _vehicle_info_list,        # <-- MULTI‑VEHICLE
-        "drivers": _driver_info_list,          # <-- MULTI‑DRIVER
+        "vehicles": _vehicle_info_list,
+        "drivers": _driver_info_list,
         "coverage": _coverage_info,
         "guidewire": _guidewire_info,
         "state": _guidewire_info.get("state"),
 
-        # Documents + prior insurance
         "documents": payload.get("documents", []),
-        "hadPriorInsurance": payload.get("hadPriorInsurance", None),
+        "hadPriorInsurance": payload.get("hadPriorInsurance"),
 
-        # NEW — Required for Iowa rule IA‑RATING‑03
         "previousPremium": previous_premium,
         "currentPremium": current_premium,
-        "accidents": accidents
+        "accidents": accidents,
     }
-    underwriting = run_underwriting(customer, vehicles, coverage, drivers)
 
     # -----------------------------
-    # Step 4.0: final decision JSON with AI insights
+    # Step 2.3 — Underwriting Logic
+    # -----------------------------
+    risk_score = calculate_risk_score(drivers, vehicles)
+    eligibility = determine_eligibility(drivers, vehicles)
+    summary = build_summary_block(risk_score, eligibility)
+    ai = build_ai_insights(customer, coverage, risk_score)
+    details = build_underwriting_details(drivers, vehicles, risk_score, base_premium)
+
+    underwriting = {
+        "riskScore": risk_score,
+        "eligibility": eligibility,
+        "summary": summary,
+        "aiInsights": ai,
+        "details": details,
+    }
+
+    # -----------------------------
+    # Step 4.0 — Final Decision JSON
     # -----------------------------
     final_decision = build_decision_json(extracted, underwriting)
     return final_decision
-

@@ -3,8 +3,7 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.router import router
-
+from app.routers.enrich_router import router
 print(">>> MAIN.PY LOADED <<<")
 
 app = FastAPI()
