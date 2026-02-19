@@ -7,11 +7,14 @@ import PdfButton from "./PdfButton";
 function App() {
   // ✅ FIXED — wrap payload ONCE
   async function callBackendEnrich(payload) {
-    const res = await fetch("https://optimaai-underwriter-backend.onrender.com/enrich", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    const res = await fetch(
+      "https://optimaai-underwriter-backend.onrender.com/enrich",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
 
     return res.json();
   }
@@ -47,6 +50,7 @@ function App() {
     reader.readAsText(file);
   };
 
+  // ⭐ UPDATED — Correct PDF Blob handling for production
   const handleGeneratePdf = async () => {
     if (!enrichedJson) {
       alert("Please upload and enrich a JSON file first.");
@@ -59,7 +63,7 @@ function App() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(enrichedJson),
+          body: JSON.stringify({ processed_data: enrichedJson }),
         }
       );
 
@@ -68,14 +72,17 @@ function App() {
         return;
       }
 
+      // ⭐ Convert backend response → PDF Blob
       const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
 
+      // ⭐ Create a temporary download link
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = "OptimaAI_Compliance_Report.pdf";
       link.click();
 
+      // Cleanup
       window.URL.revokeObjectURL(url);
     } catch (error) {
       alert("Error generating PDF.");
