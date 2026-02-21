@@ -1,0 +1,46 @@
+{
+  "applicant": {
+    "name": "John Doe",
+    "state": "CA",
+    "zip": "90001",
+    "address": "123 Main St"
+  },
+  "drivers": [],
+  "vehicles": [],
+  "coverages": [],
+  "pricing": {
+    "finalPremium": 1200,
+    "base": 800,
+    "driverImpact": 150,
+    "vehicleImpact": 100,
+    "zipImpact": 50,
+    "coverageImpact": 200,
+    "discounts": -100,
+    "narrative": "Sample pricing narrative."
+  },
+  "risk": {
+    "score": 72,
+    "eligibility": "Eligible",
+    "topDrivers": ["Clean driving record", "Low annual mileage", "Good credit score"]
+  },
+  "summary": {
+    "narrative": "Sample executive summary narrative."
+  },
+  "compliance": {
+    "state": "CA",
+    "overallStatus": "Pass",
+    "notes": "All mandatory checks passed.",
+    "rulesChecked": []
+  },
+  "aiInsights": {
+    "driverRisk": "Sample driver risk text.",
+    "pricingRationale": "Sample pricing rationale.",
+    "underwritingExplanation": "Sample underwriting explanation.",
+    "improvementSuggestions": "Sample improvement suggestions.",
+    "narrative": "Sample AI narrative."
+  },
+  "lineage": {
+    "fields": [],
+    "missing": []
+  }
+}

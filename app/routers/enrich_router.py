@@ -19,14 +19,14 @@ from app.services.underwriting_engine.core import (
 )
 
 from app.services.compliance_engine import build_compliance_block
-
+print(">>> USING NEW ROUTER VERSION <<<")
 print(">>> ROUTER.PY LOADED <<<")
 print(">>> USING SCORING FROM:", calculate_risk_score.__module__)
 
 from app.processor.processor import process_data
 from app.dispatcher.dispatcher import dispatch_output
 
-from app.services.pdf_generator import generate_compliance_pdf
+from app.pdf_layout.pdf_render import generate_pdf
 from app.models.compliance_summary import ComplianceSummary
 from app.compliance.state_loader import load_state_rules
 from app.compliance.state_normalizer import STATE_NAME
@@ -262,7 +262,14 @@ def generate_compliance_report(payload: dict):
     )
 
     summary_dict = summary_obj.model_dump()
-    pdf_bytes = generate_compliance_pdf(summary_dict)
+
+    # Generate the ReportLab PDF
+    output_path = "test_placeholder.pdf"
+    generate_pdf(output_path)
+
+    # Read the PDF bytes correctly
+    with open(output_path, "rb") as f:
+        pdf_bytes = f.read()
 
     return Response(
         content=pdf_bytes,
@@ -271,3 +278,4 @@ def generate_compliance_report(payload: dict):
             "Content-Disposition": "attachment; filename=compliance_report.pdf"
         },
     )
+

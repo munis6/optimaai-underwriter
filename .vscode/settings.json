@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "./",
+        "./app"
+    ],
+    "python-envs.pythonProjects": []
+}
