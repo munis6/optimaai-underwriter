@@ -6,6 +6,5 @@ def dispatch_output(result):
     Simple English: "Dispatcher formats the final response."
     """
     return {
-        "status": "processed",
-        "processed_data": result
+        "status": "processed"
     }

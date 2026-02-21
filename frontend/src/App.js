@@ -5,25 +5,10 @@ import BeforeAfterPanel from "./BeforeAfterPanel";
 import PdfButton from "./PdfButton";
 
 function App() {
-  // ✅ FIXED — wrap payload ONCE
-  async function callBackendEnrich(payload) {
-    const res = await fetch(
-      "https://optimaai-underwriter-backend.onrender.com/enrich",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    return res.json();
-  }
-
   const [rawJson, setRawJson] = useState(null);
-  const [enrichedJson, setEnrichedJson] = useState(null);
   const [isEnriching, setIsEnriching] = useState(false);
+  const [riskScore, setRiskScore] = useState(null);
 
-  // ✅ FIXED — DO NOT double-wrap payload
   const handleFileSelect = async (file) => {
     const reader = new FileReader();
 
@@ -35,10 +20,19 @@ function App() {
         setIsEnriching(true);
 
         try {
-          const response = await callBackendEnrich(parsed); // FIXED
-          setEnrichedJson(response.processed_data);
+          const result = await fetch(
+            "https://optimaai-underwriter-backend.onrender.com/receive",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ data: parsed })
+            }
+          );
+
+          const json = await result.json();
+          setRiskScore(json.riskScore);
         } catch (err) {
-          alert("Error contacting enrichment service.");
+          alert("Error contacting backend.");
         }
 
         setIsEnriching(false);
@@ -50,10 +44,9 @@ function App() {
     reader.readAsText(file);
   };
 
-  // ⭐ UPDATED — Correct PDF Blob handling for production
   const handleGeneratePdf = async () => {
-    if (!enrichedJson) {
-      alert("Please upload and enrich a JSON file first.");
+    if (!rawJson) {
+      alert("Please upload a JSON file first.");
       return;
     }
 
@@ -63,7 +56,7 @@ function App() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ processed_data: enrichedJson }),
+          body: JSON.stringify({ processed_data: rawJson })
         }
       );
 
@@ -72,17 +65,14 @@ function App() {
         return;
       }
 
-      // ⭐ Convert backend response → PDF Blob
       const blob = await response.blob();
 
-      // ⭐ Create a temporary download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = "OptimaAI_Compliance_Report.pdf";
       link.click();
 
-      // Cleanup
       window.URL.revokeObjectURL(url);
     } catch (error) {
       alert("Error generating PDF.");
@@ -96,10 +86,10 @@ function App() {
       <UploadPanel onFileSelect={handleFileSelect} />
 
       {isEnriching && (
-        <div className="loading-banner">Enriching JSON… please wait</div>
+        <div className="loading-banner">Processing JSON… please wait</div>
       )}
 
-      <BeforeAfterPanel rawJson={rawJson} enrichedJson={enrichedJson} />
+      <BeforeAfterPanel rawJson={rawJson} riskScore={riskScore} />
 
       <PdfButton onGenerate={handleGeneratePdf} />
     </div>

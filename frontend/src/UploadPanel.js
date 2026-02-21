@@ -21,7 +21,7 @@ function UploadPanel({ onFileSelect }) {
       />
 
       <p style={{ marginTop: "12px", fontSize: "14px", color: "#475569" }}>
-        Select a JSON file to process and enrich using OptimaAI.
+        Upload a JSON file to generate your OptimaAI report.
       </p>
     </div>
   );
