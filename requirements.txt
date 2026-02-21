@@ -21,3 +21,4 @@ pdfkit==1.0.0
 fastapi
 uvicorn[standard]
 groq
+reportlab==4.0.9
