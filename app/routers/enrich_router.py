@@ -31,18 +31,18 @@ def receive_input(payload: UnderwriterInput):
 def generate_compliance_report(payload: dict):
     print(">>> PDF ENDPOINT HIT <<<")
 
-    # Render-safe temp path
+    # Extract JSON sent from frontend
+    processed = payload.get("processed_data", {})
+
+    # Render-safe path on Render
     output_path = "/tmp/compliance_report.pdf"
 
     try:
         print(">>> Generating PDF at:", output_path)
-        generate_pdf(output_path)
+        generate_pdf(output_path, processed)
     except Exception as e:
         print(">>> PDF GENERATION ERROR:", e)
-        return {
-            "error": "PDF generation failed",
-            "details": str(e)
-        }
+        return {"error": "PDF generation failed", "details": str(e)}
 
     try:
         print(">>> Reading PDF bytes...")
@@ -50,10 +50,7 @@ def generate_compliance_report(payload: dict):
             pdf_bytes = f.read()
     except Exception as e:
         print(">>> FILE READ ERROR:", e)
-        return {
-            "error": "PDF read failed",
-            "details": str(e)
-        }
+        return {"error": "PDF read failed", "details": str(e)}
 
     print(">>> PDF SUCCESSFULLY RETURNED <<<")
 
