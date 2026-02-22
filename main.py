@@ -3,12 +3,11 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers.enrich_router import router
 
 print(">>> MAIN.PY LOADED <<<")
 
 # ============================
-# CORS MUST BE APPLIED BEFORE ROUTES
+# CORS MUST BE DECLARED BEFORE APP AND ROUTER IMPORTS
 # ============================
 origins = [
     "http://localhost:3000",
@@ -16,8 +15,10 @@ origins = [
     "https://optimaai-underwriter-ui.onrender.com"
 ]
 
+# Create app FIRST
 app = FastAPI()
 
+# Apply CORS middleware BEFORE importing routers
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -26,7 +27,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ============================
-# ROUTES MUST BE INCLUDED AFTER CORS
-# ============================
+# Import router AFTER CORS is applied
+from app.routers.enrich_router import router
+
+# Register routes
 app.include_router(router)
