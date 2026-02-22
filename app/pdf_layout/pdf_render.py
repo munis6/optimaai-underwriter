@@ -48,27 +48,35 @@ def generate_pdf(output_path, enriched_json):
     c = canvas.Canvas(output_path, pagesize=letter)
 
     # Page 1
+    print("Rendering page 1…")
     render_executive_summary_page(c, context, page_number=1)
 
     # Page 2
+    print("Rendering page 2…")
     render_customer_driver_details_page(c, context, page_number=2)
 
     # Page 3
+    print("Rendering page 3…")
     render_vehicle_details_page(c, context, page_number=3)
 
     # Page 4
+    print("Rendering page 4…")
     render_coverage_summary_page(c, context, page_number=4)
 
     # Page 5
+    print("Rendering page 5…")
     render_pricing_breakdown_page(c, context, page_number=5)
 
     # Page 6
+    print("Rendering page 6…")
     render_compliance_summary_page(c, context, page_number=6)
 
     # Page 7
+    print("Rendering page 7…")
     render_ai_insights_summary_page(c, context, page_number=7)
 
     # Page 8
+    print("Rendering page 8…")
     render_data_lineage_page(c, context, page_number=8)
 
     c.save()
